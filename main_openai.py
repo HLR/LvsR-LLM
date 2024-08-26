@@ -13,7 +13,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--models", nargs="+", default=["gpt-4-0125-preview", "gpt-3.5-turbo-0125"], help="List of LLM models to use.")
     parser.add_argument("--in-context-numbers", nargs="+", type=int, default=[10, 30, 100], help="List of in-context example numbers to use.")
     parser.add_argument("--feature-nums", nargs="+", type=int, default=[1, 2, 3, 4], help="List of feature numbers to use.")
-    parser.add_argument("--configs", nargs="+", default=["Named_Features","Anonymized_Features","Randomized_Ground_Truth","Direct_QA","Reasoning","Missing_Digits"], help="List of prompt configurations to use.")
+    parser.add_argument("--configs", nargs="+", default=["Named_Features","Anonymized_Features","Randomized_Ground_Truth","Direct_QA","Reasoning","Missing_Inputs","Missing_Inputs_and_Anonymized_Features"], help="List of prompt configurations to use.")
     parser.add_argument("--api-key-token", required=True, help="OpenAI API key.")
     parser.add_argument("--seed", type=int, default=100, help="Random seed for reproducibility.")
     parser.add_argument("--test-sample-num", type=int, default=300, help="Number of test samples to evaluate.")
@@ -73,12 +73,13 @@ def evaluate_dataset(client: OpenAI, args: argparse.Namespace, dataset: str, mod
 def main():
     args = parse_arguments()
     client = OpenAI(api_key=args.api_key)
-
+    # Iterate through all combinations of datasets, models, in-context examples, features, and configurations
     for dataset in args.datasets:
         for model_name in args.models:
             for in_context in args.in_context_numbers:
                 for feature_num in args.feature_nums:
                     for config in args.configs:
+                        # Skip certain combinations based on experimental constraints
                         if (in_context == 0 and "Named_Features" not in config) or \
                            (config == "Reasoning" and in_context > 0) or \
                            (dataset == "Admission_Chance" and in_context > 101) or \

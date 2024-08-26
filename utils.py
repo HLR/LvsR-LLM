@@ -60,7 +60,7 @@ def create_IO_example(dataset: str, x: List[Union[float, int, bool]], y: float, 
     x_context = ""
     for i in range(feature_num):
         feature_name = Names[i]
-        feature_value = "?" if config == "Missing_Inputs" and random.random() > 0.5 else str(x[i])
+        feature_value = "?" if "Missing_Inputs" in config and random.random() > 0.5 else str(x[i])
         x_context += f"{feature_name}: {feature_value}\n"
 
     output_value = generate_random_output(dataset) if config == "Randomized_Ground_Truth" and not is_test else y
