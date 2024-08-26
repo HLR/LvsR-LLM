@@ -13,8 +13,8 @@ def parse_arguments():
     parser.add_argument("--in-context-numbers", nargs="+", type=int, default=[0, 10, 30, 100], help="List of in-context example numbers to use.")
     parser.add_argument("--feature-nums", nargs="+", type=int, default=[1, 2, 3, 4], help="List of feature numbers to use.")
     parser.add_argument("--configs", nargs="+", default=["Named_Features", "Anonymized_Features", "Randomized_Ground_Truth", "Reasoning"], help="List of prompt configurations to use.")
-    parser.add_argument("--input-folder", type=str, default="outputs", help="The output folder's name to save the outputs.")
-    parser.add_argument("--output-folder", type=str, default="/", help="The output folder's name to save the outputs.")
+    parser.add_argument("--input-folder", type=str, default="LLM_Results", help="The folder's name to read the LLM results.")
+    parser.add_argument("--output-folder", type=str, default="./", help="The output folder's name to save the outputs.")
     parser.add_argument("--testing-sampling", type=int, default=0, help="A number assigned to the outputs as sampling.")
     return parser.parse_args()
 
