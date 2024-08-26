@@ -51,12 +51,6 @@ python main.py --action train --dataset <dataset_name> --output <output_file.csv
 
 This will train several models (Ridge Regression, Decision Tree, ...) on the dataset and evaluate their performance. The results will be saved to the specified output CSV file.
 
-`<dataset_name>` can be one of:
-
-- `Insurance_Cost` https://www.kaggle.com/datasets/mirichoi0218/insurance
-- `Admission_Chance` https://www.kaggle.com/datasets/mohansacharya/graduate-admissions
-- `Used_Car_Prices` https://www.kaggle.com/datasets/ananaymital/us-used-cars-dataset
-
 ## Requirements
 
 See the `requirements.txt` file for a list of required Python packages.
