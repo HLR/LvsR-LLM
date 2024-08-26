@@ -13,7 +13,7 @@ def parse_arguments() -> argparse.Namespace:
     parser.add_argument("--models", nargs="+", default=["gpt-4-0125-preview", "gpt-3.5-turbo-0125"], help="List of LLM models to use.")
     parser.add_argument("--in-context-numbers", nargs="+", type=int, default=[10, 30, 100], help="List of in-context example numbers to use.")
     parser.add_argument("--feature-nums", nargs="+", type=int, default=[1, 2, 3, 4], help="List of feature numbers to use.")
-    parser.add_argument("--configs", nargs="+", default=["Named_Features","Anonymized_Features","Randomized_Ground_Truth","Direct_QA","Reasoning","Missing_Inputs","Missing_Inputs_and_Anonymized_Features"], help="List of prompt configurations to use.")
+    parser.add_argument("--configs", nargs="+", default=["Named_Features","Anonymized_Features","Randomized_Ground_Truth","Reasoning","Missing_Inputs","Missing_Inputs_and_Anonymized_Features"], help="List of prompt configurations to use.")
     parser.add_argument("--api-key-token", required=True, help="OpenAI API key.")
     parser.add_argument("--seed", type=int, default=100, help="Random seed for reproducibility.")
     parser.add_argument("--test-sample-num", type=int, default=300, help="Number of test samples to evaluate.")
