@@ -35,7 +35,7 @@ def evaluate_responses(dataset, model_name, in_context, feature_num, config, arg
     predicted_responses = []
 
     for index, row in df_test.iterrows():
-        predicted_response = extract_answer(str(row['raw_text']))
+        predicted_response = extract_answer(str(row['processed_response']))
         if predicted_response is not None and predicted_response != -1:
             real_responses.append(y_test[index])
             if dataset == "Admission_Chance" and (predicted_response > 1.0 or predicted_response < 0):
