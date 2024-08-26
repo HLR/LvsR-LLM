@@ -37,7 +37,7 @@ def train_and_evaluate_models(dataset,output):
                 models = [
                     ("Ridge", Ridge()),
                     ("DecisionTree", DecisionTreeRegressor(max_depth=3, random_state=43)),
-                    ("RandomForest", RandomForestRegressor(n_estimators=10, max_depth=2, random_state=42)),
+                    ("RandomForest", RandomForestRegressor(n_estimators=10000, max_depth=2, random_state=42)),
                     ("RandomGaussian", lambda _: [generate_random_output(dataset) for _ in range(300)]),
                     ("Mean", lambda _: [get_mean_prediction(dataset) for _ in range(300)]),
                 ]
