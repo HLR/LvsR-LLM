@@ -37,7 +37,7 @@ def train_and_evaluate_models(dataset,output):
                 models = [
                     ("Ridge", Ridge()),
                     ("DecisionTree", DecisionTreeRegressor(max_depth=3, random_state=43)),
-                    ("RandomForest", RandomForestRegressor(n_estimators=10000, max_depth=2, random_state=42)),
+                    ("RandomForest", RandomForestRegressor(n_estimators=1000, max_depth=2, random_state=42)),
                     ("RandomGaussian", lambda _: [generate_random_output(dataset) for _ in range(300)]),
                     ("Mean", lambda _: [get_mean_prediction(dataset) for _ in range(300)]),
                 ]
@@ -51,6 +51,8 @@ def train_and_evaluate_models(dataset,output):
                     results.append(evaluate_model(name, y_test, y_pred, dataset, feature_number, sample_num, output_status))
 
     df_output = pd.DataFrame(results)
+    if output is None:
+        output=dataset+"_MLResults.csv"
     df_output.to_csv(output, index=False)
     print(f"Results saved to {output}")
 
