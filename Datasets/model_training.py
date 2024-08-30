@@ -12,8 +12,8 @@ def train_and_evaluate_models(dataset,output):
 
     if dataset == "Admission_Chance":
         Y_label = "Chance of Admit"
-    elif dataset == "usedcars":
-        Y_label = "Used_Car_Prices"
+    elif dataset == "Used_Car_Prices":
+        Y_label = "price"
     elif dataset == "Insurance_Cost":
         Y_label = "charges"
 
