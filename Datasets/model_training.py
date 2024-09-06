@@ -18,7 +18,7 @@ def train_and_evaluate_models(dataset,output):
         Y_label = "charges"
 
     results = []    
-    for feature_number in range(4):
+    for feature_number in range(1,5):
         for sample_num in [10,30,100]:
             for output_status in ["Real","Random"]:
                 if feature_number==4 and not dataset=="Used_Car_Prices": continue
