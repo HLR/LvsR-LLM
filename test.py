@@ -3,7 +3,7 @@ import pandas as pd
 import os
 import re
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
-from utils import create_file_name
+from utils import create_file_name, extract_answer
 from reader import read_dataset
 
 def parse_arguments():
@@ -18,13 +18,6 @@ def parse_arguments():
     parser.add_argument("--testing-sampling", type=int, default=0, help="A number assigned to the outputs as sampling.")
     return parser.parse_args()
 
-def extract_answer(response):
-    pattern = r'-?\d+(?:\.\d+)?'
-    numbers = re.findall(pattern, response.replace(",", ""))
-    try:
-        return float(numbers[-1])
-    except IndexError:
-        return None
 
 def evaluate_responses(dataset, model_name, in_context, feature_num, config, args):
     file_name = create_file_name(args.input_folder, dataset, model_name, in_context, feature_num, config, testing_sampling=args.testing_sampling)
@@ -46,12 +39,14 @@ def evaluate_responses(dataset, model_name, in_context, feature_num, config, arg
     mae = mean_absolute_error(real_responses, predicted_responses)
     r2 = r2_score(real_responses, predicted_responses)
 
+    shorten_llm_names={"gpt-4-0125-preview":'GPT-4',"gpt-3.5-turbo-0125":'GPT-3',"meta/meta-llama-3-70b-instruct":'LLaMA 3'}.get
+
     return {
         "features": feature_num,
         "dataset": dataset,
-        "model": model_name,
+        "model": shorten_llm_names(model_name),
         "in_context": in_context,
-        "config": config,
+        "config": "Direct QA" if in_context==0 and config=="Named_Features" else config,
         "MSE": float(mse),
         "MAE": float(mae),
         "r2": float(r2)
@@ -67,7 +62,7 @@ def main():
                 for feature_num in args.feature_nums:
                     for config in args.configs:
                         # Skip certain combinations based on experimental constraints
-                        if (in_context == 0 and "Named_Features" not in config) or \
+                        if (in_context == 0 and not (("Named_Features" in config) or ("Reasoning" in config))) or \
                            (config == "Reasoning" and in_context > 0) or \
                            (dataset == "Admission_Chance" and in_context > 101) or \
                            (feature_num == 4 and dataset != "Used_Car_Prices") or \

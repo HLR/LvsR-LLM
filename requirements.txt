@@ -3,3 +3,5 @@ numpy
 scikit-learn
 openai
 replicate
+matplotlib
+seaborn

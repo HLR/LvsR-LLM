@@ -37,14 +37,14 @@ def run_replicate_model(model_name: str, prompt: str, max_tokens: int) -> str:
     return "".join(response)
 
 def evaluate_dataset(args: argparse.Namespace, dataset: str, model_name: str, in_context: int, feature_num: int, config: str) -> None:
-    file_name = create_file_name(args.output_folder,dataset, model_name, in_context, feature_num, config, testing_sampling=0)
+    file_name = create_file_name(args.output_folder,dataset, model_name, in_context, feature_num, config, testing_sampling=args.testing_sampling)
     print(f"Processing: {file_name}")
 
     names, x_incontext, x_test, y_incontext, y_test = read_dataset(dataset, config)
     existing_df = pd.read_csv(file_name) if os.path.exists(file_name) else pd.DataFrame()
 
     additional_instruction = get_additional_instruction(dataset, names[-1]) if in_context == 0 else ""
-    explanation = create_explanation(names[-1], additional_instruction, "Reasoning" in config)
+    explanation = create_explanation(names[-1], additional_instruction, ("Named_Features" in config) or ("Reasoning" in config))
     
     prompt_messages = f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n{explanation}<|eot_id|>"
     
@@ -68,7 +68,7 @@ def evaluate_dataset(args: argparse.Namespace, dataset: str, model_name: str, in
                     response_text = run_replicate_model(model_name, cur_prompt_messages, 1000)
                 else:
                     response_text = run_replicate_model(model_name, cur_prompt_messages, 6)
-                    processed_text = process_response(response_text, False)
+                processed_text = process_response(response_text, "Reasoning" in config)
                 
                 df = pd.DataFrame([{"raw_text": response_text, "processed_response": processed_text}])
                 df.to_csv(file_name, mode='a', header=not os.path.exists(file_name), index=False)
@@ -97,7 +97,7 @@ def main():
                 for feature_num in args.feature_nums:
                     for config in args.configs:
                         # Skip certain combinations based on experimental constraints
-                        if (in_context == 0 and "Named_Features" not in config) or \
+                        if (in_context == 0 and not (("Named_Features" in config) or ("Reasoning" in config))) or \
                            (config == "Reasoning" and in_context > 0) or \
                            (dataset == "Admission_Chance" and in_context > 101) or \
                            (feature_num == 4 and dataset != "Used_Car_Prices"):

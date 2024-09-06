@@ -30,7 +30,7 @@ def evaluate_dataset(client: OpenAI, args: argparse.Namespace, dataset: str, mod
     existing_df = pd.read_csv(file_name) if os.path.exists(file_name) else pd.DataFrame()
 
     additional_instruction = get_additional_instruction(dataset, names[-1]) if in_context == 0 else ""
-    explanation = create_explanation(names[-1], additional_instruction, "Reasoning" in config)
+    explanation = create_explanation(names[-1], additional_instruction, ("Named_Features" in config) or ("Reasoning" in config))
 
     messages = [{"role": "system", "content": explanation}]
     for x, y in zip(x_incontext[:in_context], y_incontext[:in_context]):
@@ -58,7 +58,6 @@ def evaluate_dataset(client: OpenAI, args: argparse.Namespace, dataset: str, mod
                 
                 df = pd.DataFrame([{"raw_text": response_text, "processed_response": processed_response}])
                 df.to_csv(file_name, mode='a', header=not os.path.exists(file_name), index=False)
-
                 messages.pop()
                 break
             except Exception as e:
@@ -80,7 +79,7 @@ def main():
                 for feature_num in args.feature_nums:
                     for config in args.configs:
                         # Skip certain combinations based on experimental constraints
-                        if (in_context == 0 and "Named_Features" not in config) or \
+                        if (in_context == 0 and not (("Named_Features" in config) or ("Reasoning" in config))) or \
                            (config == "Reasoning" and in_context > 0) or \
                            (dataset == "Admission_Chance" and in_context > 101) or \
                            (feature_num == 4 and dataset != "Used_Car_Prices"):

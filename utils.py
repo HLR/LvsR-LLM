@@ -1,5 +1,6 @@
 import numpy as np
 import random
+import re
 from typing import List, Tuple, Union
 
 def create_file_name(output_folder: str, dataset: str, model_name: str, in_context: int, 
@@ -117,4 +118,13 @@ def process_response(response_text: str, is_reasoning: bool) -> float:
     """
     if not is_reasoning:
         response_text = response_text.split(":")[-1].split("is")[-1].strip("$. %").replace(",", "")
-    return float(response_text)
+        return float(response_text)
+    return extract_answer(response_text)
+
+def extract_answer(response):
+    pattern = r'-?\d+(?:\.\d+)?'
+    numbers = re.findall(pattern, response.replace(",", ""))
+    try:
+        return float(numbers[-1])
+    except IndexError:
+        return None
