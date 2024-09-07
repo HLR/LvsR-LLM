@@ -44,7 +44,7 @@ def evaluate_dataset(args: argparse.Namespace, dataset: str, model_name: str, in
     existing_df = pd.read_csv(file_name) if os.path.exists(file_name) else pd.DataFrame()
 
     additional_instruction = get_additional_instruction(dataset, names[-1]) if in_context == 0 else ""
-    explanation = create_explanation(names[-1], additional_instruction, ("Named_Features" in config and in_context==0) or ("Reasoning" in config))
+    explanation = create_explanation(names[-1], additional_instruction,("Reasoning" in config))
     
     prompt_messages = f"<|begin_of_text|><|start_header_id|>system<|end_header_id|>\n\n{explanation}<|eot_id|>"
     
