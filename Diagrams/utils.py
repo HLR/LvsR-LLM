@@ -2,13 +2,11 @@ import pandas as pd, numpy as np,seaborn as sns,warnings
 from fontTools.config import Config
 from matplotlib.ticker import ScalarFormatter
 
-# "Insurance_Cost", "Admission_Chance", "Used_Car_Prices"
-# "Named_Features", "Anonymized_Features", "Randomized_Ground_Truth", "Direct QA","Reasoning"
-# better_config_names bettername
+
 dataset_names = ["Admission_Chance", "Insurance_Cost", "Used_Car_Prices"]
 features = [1, 2, 3]
 in_contexts = [10, 30, 100]
-models = ['GPT-4', 'GPT-3','LLaMA 3']
+models = ['GPT-3','LLaMA 3', 'GPT-4']
 configs= ["Named_Features", "Anonymized_Features", "Randomized_Ground_Truth", "Direct QA"]
 
 def pre_process(plt, global_font_size=9):
@@ -157,51 +155,77 @@ def axis_post_process_whole_picture(axes, config, angles, color, labels, dataset
             axes.text(sub_angle, axes.get_ylim()[1] * 1.19, f'IC{ic}', ha='center', va='center', size=10,
                       rotation=-90 + np.degrees(sub_angle))
 
-def preprocess_context(plt,dpi=1000):
-    fig, axes = plt.subplots(1, 3, figsize=(8, 5), sharey=False,dpi=1000)
+def preprocess_context(plt,dpi=300):
+    """
+    Prepare the matplotlib figure and axes for visualization.
+
+    Args:
+        plt: matplotlib pyplot object
+        dpi (int): Dots per inch for the figure
+
+    Returns:
+        tuple: Figure, axes, and color palette
+    """
+    fig, axes = plt.subplots(1, 3, figsize=(8, 5), sharey=False,dpi=dpi)
     colors = sns.color_palette("mako")
     colors = [sns.color_palette("viridis")[0],sns.color_palette("viridis")[3],sns.color_palette("viridis")[5]]+["black","grey"]
     return fig, axes, colors
 
 
-
-def process_dataset_wholecontext(df,dataset):
-    df = df[(df['dataset'] == dataset)]
-    df = df[(df['features'].isin([1, 2, 3])) & (df['model'].isin(['GPT3',"Llama3",'GPT4',"Mean"])) & (df['in_context'].isin([10, 30, 100])) & (df['config'].isin(['noname', 'realnames', 'realname_randomoutput']))]
-    return df
-
 def process_dataset_context(dataset_df,dataset,feature_num=3):
+    """
+        Filter and process the dataset for context-based analysis.
+
+        Args:
+            dataset_df (pd.DataFrame): Input dataframe
+            dataset (str): Name of the dataset to filter
+            feature_num (int): Number of features to consider
+
+        Returns:
+            pd.DataFrame: Processed dataframe
+        """
     dataset_df= dataset_df[dataset_df['dataset'] == dataset]
     dataset_df = pd.concat([
         dataset_df[
             (dataset_df['features'].isin([feature_num])) &
-            (dataset_df['model'].isin(['GPT3', "Llama3", 'GPT4'])) &
+            (dataset_df['model'].isin(['GPT-3', "LLaMA 3", 'GPT-4'])) &
             (dataset_df['in_context'].isin([10,30,100])) &
-            (dataset_df['config'].isin(['realnames','noname']))
+            (dataset_df['config'].isin(['Named_Features','Anonymized_Features']))
         ],
         dataset_df[
             (dataset_df['features'].isin([feature_num])) &
             (dataset_df['model'].isin(["Ridge", "RandomForest"])) &
             (dataset_df['in_context'].isin([10,30,100])) &
-            (dataset_df['config'].isin(['noname']))
+            (dataset_df['config'].isin(['Real']))
         ]
     ], ignore_index=True)
     return dataset_df
 
-def process_dataset_feature(dataset_df,dataset,context_num=100):
+def process_dataset_feature(dataset_df,dataset,in_context_num=100):
+    """
+    Filter and process the dataset for feature-based analysis.
+
+    Args:
+        dataset_df (pd.DataFrame): Input dataframe
+        dataset (str): Name of the dataset to filter
+        in_context_num (int): In-context learning size to consider
+
+    Returns:
+        pd.DataFrame: Processed dataframe
+    """
     dataset_df = dataset_df[dataset_df['dataset'] == dataset]
     dataset_df = pd.concat([
         dataset_df[
             (dataset_df['features'].isin([1,2,3])) &
-            (dataset_df['model'].isin(['GPT3', "Llama3", 'GPT4'])) &
-            (dataset_df['in_context'].isin([context_num])) &
-            (dataset_df['config'].isin(['realnames','noname']))
+            (dataset_df['model'].isin(['GPT-3', "LLaMA 3", 'GPT-4'])) &
+            (dataset_df['in_context'].isin([in_context_num])) &
+            (dataset_df['config'].isin(['Named_Features','Anonymized_Features']))
         ],
         dataset_df[
             (dataset_df['features'].isin([1,2,3])) &
             (dataset_df['model'].isin(["Ridge", "RandomForest"])) &
-            (dataset_df['in_context'].isin([context_num])) &
-            (dataset_df['config'].isin(['noname']))
+            (dataset_df['in_context'].isin([in_context_num])) &
+            (dataset_df['config'].isin(['Real']))
         ]
     ], ignore_index=True)
     return dataset_df
@@ -209,7 +233,19 @@ def process_dataset_feature(dataset_df,dataset,context_num=100):
 
 
 def axis_post_process_context(axes,x,width,formatter,dataset,Y_SIZE,x_text=[10,30,100]):
-    axes.set_title(f'{dataset}', fontsize=16,y=1.06,fontweight ="bold")
+    """
+    Post-process the axis for context-based visualization.
+
+    Args:
+        axes: matplotlib axes object
+        x: x-coordinates for the bars
+        width: width of the bars
+        formatter: formatter for y-axis labels
+        dataset (str): Name of the dataset
+        Y_SIZE (function): Function to determine y-axis limit
+        x_text (list): Labels for x-axis ticks
+    """
+    axes.set_title(f'{dataset.replace("_"," ")}', fontsize=16,y=1.06,fontweight ="bold")
     axes.set_xticks(x + width)
     axes.set_xticklabels(x_text)
     axes.set_ylim(0, Y_SIZE(dataset))

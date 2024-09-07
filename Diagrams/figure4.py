@@ -3,28 +3,24 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Arc
-from utils import pre_process, preprocess_whole_picture, process_dataset_whole_picture, axis_post_process_whole_picture, dataset_names, configs
+from Diagrams.utils import pre_process, preprocess_whole_picture, process_dataset_whole_picture, axis_post_process_whole_picture, dataset_names, configs
 
-def parse_arguments():
-    """Parse command line arguments."""
-    parser = argparse.ArgumentParser(description="Visualize ML evaluation results.")
-    parser.add_argument("--evaluation_results", default="../evaluation_results.csv", help="Path to evaluation results CSV")
-    parser.add_argument("--admission_chance", default="../Datasets/Admission_Chance_MLResults.csv", help="Path to Admission Chance ML results CSV")
-    parser.add_argument("--insurance_cost", default="../Datasets/Insurance_Cost_MLResults.csv", help="Path to Insurance Cost ML results CSV")
-    parser.add_argument("--used_car_prices", default="../Datasets/Used_Car_Prices_MLResults.csv", help="Path to Used Car Prices ML results CSV")
-    parser.add_argument("--output", default="./Figure4.png", help="Output figure path and name")
-    parser.add_argument("--dpi", type=int, default=300, help="DPI of the output figure")
-    parser.add_argument("--metric", default="MSE", choices=["MSE", "MAE", "r2"], help="Input metric for evaluation")
-    return parser.parse_args()
+def main_figure4(evaluation_results,admission_chance_results,insurance_cost_results,used_car_prices_results,metric,dpi):
+    """
+    Generate and display a complex figure comparing different models and datasets.
 
-def main():
-    args = parse_arguments()
-
-    # Load data
-    evaluation_results = pd.read_csv(args.evaluation_results)
-    Admission_Chance_MLResults = pd.read_csv(args.admission_chance)
-    Insurance_Cost_MLResults = pd.read_csv(args.insurance_cost)
-    Used_Car_Prices_MLResults = pd.read_csv(args.used_car_prices)
+    Args:
+        evaluation_results (str): Path to the evaluation results CSV file.
+        admission_chance_results (str): Path to the admission chance results CSV file.
+        insurance_cost_results (str): Path to the insurance cost results CSV file.
+        used_car_prices_results (str): Path to the used car prices results CSV file.
+        metric (str): The metric to use for comparison ('r2', 'MSE', or 'MAE').
+        dpi (int): The resolution of the output figure.
+    """
+    evaluation_results = pd.read_csv(evaluation_results)
+    Admission_Chance_MLResults = pd.read_csv(admission_chance_results)
+    Insurance_Cost_MLResults = pd.read_csv(insurance_cost_results)
+    Used_Car_Prices_MLResults = pd.read_csv(used_car_prices_results)
 
     df_raw = pd.concat([evaluation_results, Admission_Chance_MLResults, Insurance_Cost_MLResults, Used_Car_Prices_MLResults], ignore_index=True)
 
@@ -35,13 +31,13 @@ def main():
         "Used_Car_Prices": 1.5
     }
 
-    if args.metric == "MSE":
+    if metric == "MSE":
         Y_SIZE = {
             "Admission_Chance": 0.025,
             "Insurance_Cost": 10**9/5*1.2,
             "Used_Car_Prices": 10**9*3
         }
-    elif args.metric == "MAE":
+    elif metric == "MAE":
         Y_SIZE = {
             "Admission_Chance": 0.15,
             "Insurance_Cost": 10**4*1.2,
@@ -52,7 +48,7 @@ def main():
 
     # Prepare plot elements
     scientific_formatter, formatter, features, in_contexts, models = pre_process(plt, 9)
-    fig, axes, palette, main_angles, sub_angles, angles, labels = preprocess_whole_picture(plt, dpi=args.dpi)
+    fig, axes, palette, main_angles, sub_angles, angles, labels = preprocess_whole_picture(plt, dpi=dpi)
 
     # Process and plot data for each dataset
     for i, dataset in enumerate(dataset_names):
@@ -69,8 +65,8 @@ def main():
             for model in models:
                 for in_context in in_contexts:
                     for feature in features:
-                        metric_value = df[(df['config'] == config) & (df['features'] == feature) & (df['in_context'] == in_context) & (df['model'] == model)][args.metric].values
-                        if args.metric == "r2":
+                        metric_value = df[(df['config'] == config) & (df['features'] == feature) & (df['in_context'] == in_context) & (df['model'] == model)][metric].values
+                        if metric == "r2":
                             metric_value = 1 - metric_value
                         values.append(metric_value[0] if len(metric_value) > 0 else np.nan)
 
@@ -86,9 +82,6 @@ def main():
     fig.legend(handles, labels, loc='center', bbox_to_anchor=(0.5, 0.23), ncol=5, fontsize=11)
 
     plt.tight_layout()
-    plt.savefig(args.output, dpi=args.dpi)
     plt.show()
 
-if __name__ == "__main__":
-    main()
 
