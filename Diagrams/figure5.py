@@ -48,8 +48,8 @@ def main_figure5(evaluation_results,admission_chance_results,insurance_cost_resu
 
     # Define Y_SIZE based on the metric
     Y_SIZE = {
-        "r2": {"Admission_Chance": 0.7, "Insurance_Cost": 0.9, "Used_Car_Prices": 1.0},
-        "MSE": {"Admission_Chance": 0.015, "Insurance_Cost": 10 ** 8 * 1.5, "Used_Car_Prices": 10 ** 9 * 2},
+        "r2": {"Admission_Chance": 0.55, "Insurance_Cost": 0.9, "Used_Car_Prices": 1.0},
+        "MSE": {"Admission_Chance": 0.01, "Insurance_Cost": 10 ** 8 * 1.5, "Used_Car_Prices": 10 ** 9 * 2},
         "MAE": {"Admission_Chance": 0.08, "Insurance_Cost": 10 ** 4 * 1.0, "Used_Car_Prices": 10 ** 4 * 2.5}
     }.get(metric, {"Admission_Chance": 0.7, "Insurance_Cost": 0.9, "Used_Car_Prices": 1.0})
 
@@ -67,9 +67,7 @@ def main_figure5(evaluation_results,admission_chance_results,insurance_cost_resu
 
         # Draw circular arcs
         for j, color in enumerate(['black', 'grey', 'white']):
-            arc = Arc((0, 0), 2 * Y_SIZE[dataset], 2 * Y_SIZE[dataset],
-                      theta1=j * 120 - 20, theta2=j * 120 + 120 - 20,
-                      color=color, linewidth=10, transform=axes[i].transData._b)
+            arc = Arc((0, 0), 2 * Y_SIZE[dataset], 2 * Y_SIZE[dataset], theta1=j * 120 - 20, theta2=j * 120 + 120 - 20, color=color, linewidth=10, transform=axes[i].transData._b)
             axes[i].add_patch(arc)
 
         # Calculate angles for the radar chart
@@ -97,14 +95,15 @@ def main_figure5(evaluation_results,admission_chance_results,insurance_cost_resu
                 values = np.concatenate((values, [values[0]]))
 
                 line_form = '-' if config == "Named_Features" else "--"
-                axes[i].plot(angles, values, line_form, linewidth=1.5,
-                             label=f"{config.replace("_", " ")} \n& IC{in_context}", color=color)
+                axes[i].plot(angles, values, line_form, linewidth=1.5, label=f"{config.replace("_", " ")} &\n{in_context} In-Context Examples", color=color)
                 axes[i].fill(angles, values, alpha=0.1, color=color)
 
         # Set up the axes
         axes[i].set_xticks(angles[:-1])
-        axes[i].set_xticklabels(labels)
+        axes[i].set_xticklabels([])
         axes[i].set_ylim(0, Y_SIZE[dataset])
+        for idx, f in enumerate(labels):
+            axes[i].text(angles[idx], axes[i].get_ylim()[1] * 1.09, f, ha='center', va='center', size=10, rotation=-90 + np.degrees(angles[idx]))
 
         # Adjust label positioning
         for label, angle in zip(axes[i].get_xticklabels(), angles[:-1]):

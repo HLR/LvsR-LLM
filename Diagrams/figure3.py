@@ -90,13 +90,13 @@ def main_figure3(evaluation_results, admission_chance_results, insurance_cost_re
         ax.axhline(y=mean_value, color='r', linestyle='--', linewidth=1)
 
         # Additional formatting for specific cases
-        if dataset == "Admission_Chance" and metric == "MSE":
-            ax.yaxis.set_major_locator(MultipleLocator(0.005))
+        # if dataset == "Admission_Chance" and metric == "MSE":
+        #     ax.yaxis.set_major_locator(MultipleLocator(0.005))
         ax.tick_params(axis='x')
 
     # Add legend
     handles, labels = axes[1].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='center', bbox_to_anchor=(0.5, -0.02), ncol=3, fontsize=11)
+    fig.legend(handles, labels, loc='center', bbox_to_anchor=(0.5, -0.02), ncol=4, fontsize=11)
 
     # Adjust layout and display
     plt.tight_layout()

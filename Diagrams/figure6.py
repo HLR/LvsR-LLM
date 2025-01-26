@@ -32,9 +32,9 @@ def main_figure6(evaluation_results, admission_chance_results, insurance_cost_re
 
     # Define Y-axis scale for different datasets and metrics
     Y_SIZE = {
-        "r2": {"Admission_Chance": 1.0, "Insurance_Cost": 1.0, "Used_Car_Prices": 1.0}.get,
-        "MSE": {"Admission_Chance": 0.025, "Insurance_Cost": 10 ** 9 / 5 * 1.2, "Used_Car_Prices": 10 ** 9 * 3}.get,
-        "MAE": {"Admission_Chance": 0.10, "Insurance_Cost": 10 ** 4 * 0.8, "Used_Car_Prices": 10 ** 4 * 3}.get
+        "r2": {"Admission_Chance": 0.6, "Insurance_Cost": 1.2, "Used_Car_Prices": 1.2}.get,
+        "MSE": {"Admission_Chance": 0.012, "Insurance_Cost": 10 ** 9 / 5 * 0.80, "Used_Car_Prices": 10 ** 9 * 2}.get,
+        "MAE": {"Admission_Chance": 0.10, "Insurance_Cost": 10 ** 4 * 0.9, "Used_Car_Prices": 10 ** 4 * 2.5}.get
     }
 
     # Prepare plot settings

@@ -132,28 +132,21 @@ def axis_post_process_whole_picture(axes, config, angles, color, labels, dataset
 
     # Set x-ticks and labels
     axes.set_xticks(angles[:-1])
-    axes.set_xticklabels(labels, size=8)
+    axes.set_xticklabels([])
     axes.set_ylim(0, Y_SIZE(dataset))
+    for idx, f in enumerate(labels):
+        axes.text(angles[idx], axes.get_ylim()[1] * 1.11, f, ha='center', va='center', size=10,rotation=-90 + np.degrees(angles[idx]))
 
-    # Adjust label alignment
-    for label, angle in zip(axes.get_xticklabels(), angles[:-1]):
-        if angle in (0, np.pi):
-            label.set_horizontalalignment('center')
-        elif 0 < angle < np.pi:
-            label.set_horizontalalignment('left')
-        else:
-            label.set_horizontalalignment('right')
 
     # Add model and in-context labels
     for idx, model in enumerate(models):
         angle = main_angles[idx]
-        axes.text(angle + np.pi / 3, axes.get_ylim()[1] * 1.29, model,
-                  ha='center', va='center', size=12, weight='bold', rotation=-90 + np.degrees(angle + np.pi / 3))
+        axes.text(angle + np.pi / 3, axes.get_ylim()[1] * 1.31, model,
+                  ha='center', va='center', size=14, weight='bold', rotation=-90 + np.degrees(angle + np.pi / 3))
 
         for jdx, ic in enumerate(in_contexts):
             sub_angle = angle + (jdx + 0.3) * (2 * np.pi / (len(models) * len(in_contexts)))
-            axes.text(sub_angle, axes.get_ylim()[1] * 1.19, f'IC{ic}', ha='center', va='center', size=10,
-                      rotation=-90 + np.degrees(sub_angle))
+            axes.text(sub_angle, axes.get_ylim()[1] * 1.21, f'IC{ic}', ha='center', va='center', size=12,rotation=-90 + np.degrees(sub_angle))
 
 def preprocess_context(plt,dpi=300):
     """

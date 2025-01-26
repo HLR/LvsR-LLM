@@ -1,9 +1,9 @@
-import argparse
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 from matplotlib.patches import Arc
 from Diagrams.utils import pre_process, preprocess_whole_picture, process_dataset_whole_picture, axis_post_process_whole_picture, dataset_names, configs
+import seaborn as sns
 
 def main_figure4(evaluation_results,admission_chance_results,insurance_cost_results,used_car_prices_results,metric,dpi):
     """
@@ -75,7 +75,9 @@ def main_figure4(evaluation_results,admission_chance_results,insurance_cost_resu
         # Set axis formatting
         axes[i].ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
         axes[i].yaxis.set_major_formatter(formatter)
-        axes[i].set_title(f'{dataset.replace("_", " ")}', fontsize=16, y=1.15, fontweight="bold")
+        offset = axes[i].yaxis.get_offset_text()
+        offset.set_position((-0.1, 1.05))
+        axes[i].set_title(f'{dataset.replace("_", " ")}', fontsize=16, y=1.2, fontweight="bold")
 
     # Add legend
     handles, labels = axes[1].get_legend_handles_labels()
