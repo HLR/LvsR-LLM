@@ -1,11 +1,12 @@
-import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-from matplotlib.patches import Arc
-from Diagrams.utils import pre_process, preprocess_whole_picture, process_dataset_whole_picture, axis_post_process_whole_picture, dataset_names, configs
-import seaborn as sns
+import numpy as np
+from Diagrams.utils import pre_process, preprocess_context, process_dataset_feature, axis_post_process_context, \
+    dataset_names
 
-def main_figure4(evaluation_results,admission_chance_results,insurance_cost_results,used_car_prices_results,metric,dpi):
+
+def main_figure4(evaluation_results, admission_chance_results, insurance_cost_results, used_car_prices_results, metric,
+                 dpi, in_context_num=100):
     """
     Generate and display a complex figure comparing different models and datasets.
 
@@ -16,74 +17,68 @@ def main_figure4(evaluation_results,admission_chance_results,insurance_cost_resu
         used_car_prices_results (str): Path to the used car prices results CSV file.
         metric (str): The metric to use for comparison ('r2', 'MSE', or 'MAE').
         dpi (int): The resolution of the output figure.
+        in_context_num (int, optional): The number of in-context examples. Defaults to 100.
     """
-    evaluation_results = pd.read_csv(evaluation_results)
-    Admission_Chance_MLResults = pd.read_csv(admission_chance_results)
-    Insurance_Cost_MLResults = pd.read_csv(insurance_cost_results)
-    Used_Car_Prices_MLResults = pd.read_csv(used_car_prices_results)
 
-    df_raw = pd.concat([evaluation_results, Admission_Chance_MLResults, Insurance_Cost_MLResults, Used_Car_Prices_MLResults], ignore_index=True)
+    # Load and concatenate all datasets
+    df_raw = pd.concat([
+        pd.read_csv(file) for file in [
+            evaluation_results,
+            admission_chance_results,
+            insurance_cost_results,
+            used_car_prices_results
+        ]
+    ], ignore_index=True)
 
-    # Define Y_SIZE based on the metric
+    # Define Y-axis scale for different metrics and datasets
     Y_SIZE = {
-        "Admission_Chance": 1.2,
-        "Insurance_Cost": 1.2,
-        "Used_Car_Prices": 1.5
-    }
+        "r2": {"Admission_Chance": 0.4, "Insurance_Cost": 0.8, "Used_Car_Prices": 1.0}.get,
+        "MSE": {"Admission_Chance": 0.008, "Insurance_Cost": 10 ** 8 * 1.2, "Used_Car_Prices": 10 ** 9 * 1.8}.get,
+        "MAE": {"Admission_Chance": 0.07, "Insurance_Cost": 10 ** 4 * 0.8, "Used_Car_Prices": 10 ** 4 * 3}.get
+    }.get(metric, lambda x: None)
 
-    if metric == "MSE":
-        Y_SIZE = {
-            "Admission_Chance": 0.025,
-            "Insurance_Cost": 10**9/5*1.2,
-            "Used_Car_Prices": 10**9*3
-        }
-    elif metric == "MAE":
-        Y_SIZE = {
-            "Admission_Chance": 0.15,
-            "Insurance_Cost": 10**4*1.2,
-            "Used_Car_Prices": 10**4*5
-        }
+    # Prepare plot formatting and data
+    scientific_formatter, formatter, features, _, models = pre_process(plt, 12)
+    fig, axes, palette = preprocess_context(plt, dpi=dpi)
 
-    Y_SIZE = Y_SIZE.get  # Convert to function for later use
-
-    # Prepare plot elements
-    scientific_formatter, formatter, features, in_contexts, models = pre_process(plt, 9)
-    fig, axes, palette, main_angles, sub_angles, angles, labels = preprocess_whole_picture(plt, dpi=dpi)
-
-    # Process and plot data for each dataset
+    # Plot data for each dataset
     for i, dataset in enumerate(dataset_names):
-        df = process_dataset_whole_picture(df_raw[:], dataset)
+        dataset_df = process_dataset_feature(df_raw.copy(), dataset, in_context_num)
+        x, width = np.arange(len(features)), 0.2
 
-        # Draw arcs
-        for j, color in enumerate(['black', 'grey', 'white']):
-            arc = Arc((0, 0), 2 * Y_SIZE(dataset), 2 * Y_SIZE(dataset), theta1=j * 120, theta2=j * 120 + 120, color=color, linewidth=10, transform=axes[i].transData._b)
-            axes[i].add_patch(arc)
+        # Plot data for each model
+        for j, model in enumerate(models + ["Ridge", "RandomForest"]):
+            model_data = dataset_df[dataset_df['model'] == model]
 
-        # Plot data for each configuration
-        for config, color in zip(configs + ["Mean Model"], palette):
-            values = []
-            for model in models:
-                for in_context in in_contexts:
-                    for feature in features:
-                        metric_value = df[(df['config'] == config) & (df['features'] == feature) & (df['in_context'] == in_context) & (df['model'] == model)][metric].values
-                        if metric == "r2":
-                            metric_value = 1 - metric_value
-                        values.append(metric_value[0] if len(metric_value) > 0 else np.nan)
+            if model in ["Ridge", "RandomForest"]:
+                values = [model_data[model_data['features'] == f][metric].values[0] for f in [1, 2, 3]]
+                if metric == "r2":
+                    values = [1 - v for v in values]
+                axes[i].plot(x + width, values, linestyle="--", label=model, color=palette[j])
+            else:
+                for config in ['Anonymized_Features', 'Named_Features']:
+                    values = [
+                        model_data[(model_data['features'] == f) & (model_data['config'] == config)][metric].values[0]
+                        for f in [1, 2, 3]]
+                    if metric == "r2":
+                        values = [1 - v for v in values]
+                    axes[i].plot(x + width, values,
+                                 linestyle='-' if config == "Named_Features" else '-.',
+                                 label=f"{model} & {config.replace('_', ' ')}",
+                                 color=palette[j])
 
-            axis_post_process_whole_picture(axes[i], config, angles, color, labels, dataset, Y_SIZE, main_angles, in_contexts, models, values)
-
-        # Set axis formatting
-        axes[i].ticklabel_format(style='sci', axis='y', scilimits=(0, 0))
-        axes[i].yaxis.set_major_formatter(formatter)
-        offset = axes[i].yaxis.get_offset_text()
-        offset.set_position((-0.1, 1.05))
-        axes[i].set_title(f'{dataset.replace("_", " ")}', fontsize=16, y=1.2, fontweight="bold")
+        # Set labels and format axes
+        axes[0].set_ylabel("1 - R2" if metric == "r2" else metric, fontsize=14)
+        axes[1].set_xlabel('Number of Features', fontsize=14)
+        axis_post_process_context(axes[i], x, width, formatter, dataset, Y_SIZE, [1, 2, 3])
 
     # Add legend
     handles, labels = axes[1].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='center', bbox_to_anchor=(0.5, 0.23), ncol=5, fontsize=11)
+    handles = [handles[i * 2] for i in range(3)] + [handles[i * 2 + 1] for i in range(3)] + [handles[-2], handles[-1]]
+    labels = [labels[i * 2] for i in range(3)] + [labels[i * 2 + 1] for i in range(3)] + [labels[-2], labels[-1]]
+    fig.legend(handles, labels, loc='center', bbox_to_anchor=(0.5, -0.06), ncol=3, fontsize=11)
 
+    # Adjust layout and display the plot
     plt.tight_layout()
+    plt.subplots_adjust(top=0.85, right=0.9)
     plt.show()
-
-
