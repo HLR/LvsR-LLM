@@ -69,7 +69,7 @@ def main_figure0(evaluation_results, admission_chance_results, insurance_cost_re
 
         # Set labels and titles
         if i == 0:
-            ax.set_ylabel("R2" if metric == "r2" else metric, fontsize=14)
+            ax.set_ylabel("1 - R2" if metric == "r2" else metric, fontsize=14)
         ax.set_title(f'{dataset.replace("_", " ")}', fontsize=16, y=1.06, fontweight="bold")
         ax.set_xticks(x + width * 1.5)
         ax.set_xticklabels([1,2,3])

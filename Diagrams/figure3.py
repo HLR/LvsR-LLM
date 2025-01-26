@@ -70,7 +70,7 @@ def main_figure3(evaluation_results, admission_chance_results, insurance_cost_re
                                  color=palette[j])
 
         # Set labels and adjust axis
-        axes[0].set_ylabel("R2" if metric == "r2" else metric, fontsize=14)
+        axes[0].set_ylabel("1 - R2" if metric == "r2" else metric, fontsize=14)
         axes[1].set_xlabel('Number of Examples', fontsize=14)
         axis_post_process_context(axes[i], x, width, formatter, dataset, Y_SIZE[metric])
 

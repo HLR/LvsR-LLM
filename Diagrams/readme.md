@@ -12,7 +12,7 @@ Before running the code, ensure you have the following:
 ## Usage
 
 1. Launch the Jupyter notebook.
-2. Set the `FIGURE` variable to the desired figure number (3-7).
+2. Set the `FIGURE` variable to the desired figure number (0-5).
 3. Adjust other parameters as needed, such as `METRIC` and `DPI`.
 4. Execute the script.
 
@@ -20,13 +20,13 @@ Before running the code, ensure you have the following:
 
 The following variables can be configured in the script:
 
-| Variable | Description |
-|----------|-------------|
-| `EVALUATION_RESULTS` | Path to the main evaluation results CSV file |
-| `ADMISSION_CHANCE_RESULTS` | Path to Admission Chance dataset results |
-| `INSURANCE_COST_RESULTS` | Path to Insurance Cost dataset results |
-| `USED_CAR_PRICES_RESULTS` | Path to Used Car Prices dataset results |
+| Variable | Description                                         |
+|----------|-----------------------------------------------------|
+| `EVALUATION_RESULTS` | Path to the main evaluation results CSV file        |
+| `ADMISSION_CHANCE_RESULTS` | Path to Admission Chance dataset results            |
+| `INSURANCE_COST_RESULTS` | Path to Insurance Cost dataset results              |
+| `USED_CAR_PRICES_RESULTS` | Path to Used Car Prices dataset results             |
 | `METRIC` | Evaluation metric to use (e.g., "MSE", "MAE", "R2") |
-| `DPI` | Resolution of the output figures |
-| `FIGURE` | Main figure to generate (3-7) |
+| `DPI` | Resolution of the output figures                    |
+| `FIGURE` | Figure number to generate (0-5)                     |
 
