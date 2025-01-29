@@ -30,11 +30,13 @@ def main_figure4(evaluation_results, admission_chance_results, insurance_cost_re
         ]
     ], ignore_index=True)
 
-    # Define Y-axis scale for different metrics and datasets
+    extender=1
+    if not in_context_num==100:
+        extender=1.5
     Y_SIZE = {
-        "r2": {"Admission_Chance": 0.4, "Insurance_Cost": 0.8, "Used_Car_Prices": 1.0}.get,
-        "MSE": {"Admission_Chance": 0.008, "Insurance_Cost": 10 ** 8 * 1.2, "Used_Car_Prices": 10 ** 9 * 1.8}.get,
-        "MAE": {"Admission_Chance": 0.07, "Insurance_Cost": 10 ** 4 * 0.8, "Used_Car_Prices": 10 ** 4 * 3}.get
+        "r2": {"Admission_Chance": 0.4*extender, "Insurance_Cost": 0.8*extender, "Used_Car_Prices": 1.0*extender}.get,
+        "MSE": {"Admission_Chance": 0.008*extender, "Insurance_Cost": 10 ** 8 * 1.2*extender, "Used_Car_Prices": 10 ** 9 * 1.8*extender}.get,
+        "MAE": {"Admission_Chance": 0.07*extender, "Insurance_Cost": 10 ** 4 * 0.8*extender, "Used_Car_Prices": 10 ** 4 * 3*extender}.get
     }.get(metric, lambda x: None)
 
     # Prepare plot formatting and data
