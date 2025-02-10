@@ -81,7 +81,7 @@ def main_figure1(evaluation_results,admission_chance_results,insurance_cost_resu
 
     # Add legend
     handles, labels = axes[1].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='center', bbox_to_anchor=(0.5, 0.23), ncol=5, fontsize=11)
+    fig.legend(handles, labels, loc='center', bbox_to_anchor=(0.5, 0.23), ncol=5, fontsize=16)
 
     plt.tight_layout()
     plt.show()

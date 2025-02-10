@@ -76,9 +76,9 @@ def main_figure4(evaluation_results, admission_chance_results, insurance_cost_re
 
     # Add legend
     handles, labels = axes[1].get_legend_handles_labels()
-    handles = [handles[i * 2] for i in range(3)] + [handles[i * 2 + 1] for i in range(3)] + [handles[-2], handles[-1]]
-    labels = [labels[i * 2] for i in range(3)] + [labels[i * 2 + 1] for i in range(3)] + [labels[-2], labels[-1]]
-    fig.legend(handles, labels, loc='center', bbox_to_anchor=(0.5, -0.06), ncol=3, fontsize=11)
+    #handles = [handles[i * 2] for i in range(3)] + [handles[i * 2 + 1] for i in range(3)] + [handles[-2], handles[-1]]
+    #labels = [labels[i * 2] for i in range(3)] + [labels[i * 2 + 1] for i in range(3)] + [labels[-2], labels[-1]]
+    fig.legend(handles, labels, loc='center', bbox_to_anchor=(0.48, -0.1), ncol=2, fontsize=13)
 
     # Adjust layout and display the plot
     plt.tight_layout()

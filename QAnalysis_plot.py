@@ -24,11 +24,11 @@ for i, examples in enumerate(example_counts):
         palette=palette
     )
 
-    ax.set_title(f"ICL Examples: {examples}", fontsize=16, weight='bold', pad=10)
+    ax.set_title(f"ICL Examples: {examples}", fontsize=17, weight='bold', pad=10)
     if i==0:
-        ax.set_ylabel("Improvement (%)", fontsize=12)
+        ax.set_ylabel("KER Improvement (%)", fontsize=15)
     else:
-        ax.set_ylabel("", fontsize=20)
+        ax.set_ylabel("")
     ax.set_ylim(-5, 40)
     ax.axhline(0, color='black', linewidth=1)
     ax.grid(axis='y', linestyle='--', alpha=0.6)
@@ -40,7 +40,7 @@ for i, examples in enumerate(example_counts):
     ax.set_xlabel("", fontsize=20, weight='bold')
 
 handles, labels = axes[0].get_legend_handles_labels()
-fig.legend(handles, [label.replace("_"," ") for label in labels], loc='center', bbox_to_anchor=(0.5, -0.03), ncol=2, fontsize=14)
+fig.legend(handles, [label.replace("_"," ") for label in labels], loc='center', bbox_to_anchor=(0.5, -0.03), ncol=2, fontsize=16)
 sns.despine(left=False, bottom=False)
 plt.tight_layout()
 plt.savefig("QAnalysis_Figure7_300DPI.png", bbox_inches='tight', dpi=300)

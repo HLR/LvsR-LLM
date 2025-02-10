@@ -103,7 +103,7 @@ def main_figure2(evaluation_results,admission_chance_results,insurance_cost_resu
         axes[i].set_xticklabels([])
         axes[i].set_ylim(0, Y_SIZE[dataset])
         for idx, f in enumerate(labels):
-            axes[i].text(angles[idx], axes[i].get_ylim()[1] * 1.09, f, ha='center', va='center', size=10, rotation=-90 + np.degrees(angles[idx]))
+            axes[i].text(angles[idx], axes[i].get_ylim()[1] * 1.09, f, ha='center', va='center', size=12, rotation=-90 + np.degrees(angles[idx]))
 
         # Adjust label positioning
         for label, angle in zip(axes[i].get_xticklabels(), angles[:-1]):
@@ -118,7 +118,7 @@ def main_figure2(evaluation_results,admission_chance_results,insurance_cost_resu
         for idx, model in enumerate(['GPT-3', "LLaMA 3", 'GPT-4']):
             angle = main_angles[idx]
             axes[i].text(angle + np.pi / 3 - np.pi / 9, axes[i].get_ylim()[1] * 1.21, model,
-                         ha='center', va='center', size=12, weight='bold',
+                         ha='center', va='center', size=14, weight='bold',
                          rotation=-90 + np.degrees(angle + np.pi / 3 - np.pi / 9))
 
         # Format y-axis
@@ -128,6 +128,6 @@ def main_figure2(evaluation_results,admission_chance_results,insurance_cost_resu
 
     # Add legend
     handles, labels = axes[0].get_legend_handles_labels()
-    fig.legend(handles, labels, loc='center', bbox_to_anchor=(-0.1, 0.5), ncol=1, fontsize=13)
+    fig.legend(handles, labels, loc='center', bbox_to_anchor=(-0.12, 0.5), ncol=1, fontsize=16)
     plt.tight_layout()
     plt.show()
