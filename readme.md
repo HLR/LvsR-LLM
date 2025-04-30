@@ -1,4 +1,4 @@
-# Learning vs Retrieval: The Role of In-Context Examples in Regression with LLMs (NAACL 2025)
+# Learning vs Retrieval: The Role of In-Context Examples in Regression with Large Language Models (NAACL 2025, Outstanding Paper Award)
 
 ## Project Overview
 
