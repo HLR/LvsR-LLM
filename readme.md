@@ -115,3 +115,27 @@ For instructions on data preprocessing and training traditional machine learning
 - scikit-learn
 - openai
 - replicate
+
+## Citation
+
+To cite our work, please use the following BibTeX entry:
+
+```bibtex
+@inproceedings{nafar-etal-2025-learning,
+    title = "Learning vs Retrieval: The Role of In-Context Examples in Regression with Large Language Models",
+    author = "Nafar, Aliakbar  and
+      Venable, K. Brent  and
+      Kordjamshidi, Parisa",
+    editor = "Chiruzzo, Luis  and
+      Ritter, Alan  and
+      Wang, Lu",
+    booktitle = "Proceedings of the 2025 Conference of the Nations of the Americas Chapter of the Association for Computational Linguistics: Human Language Technologies (Volume 1: Long Papers)",
+    month = apr,
+    year = "2025",
+    address = "Albuquerque, New Mexico",
+    publisher = "Association for Computational Linguistics",
+    url = "https://aclanthology.org/2025.naacl-long.417/",
+    pages = "8206--8229",
+    ISBN = "979-8-89176-189-6",
+    abstract = "Generative Large Language Models (LLMs) are capable of being in-context learners. However, the underlying mechanism of in-context learning (ICL) is still a major research question, and experimental research results about how models exploit ICL are not always consistent. In this work, we propose a framework for evaluating in-context learning mechanisms, which we claim are a combination of retrieving internal knowledge and learning from in-context examples by focusing on regression tasks. First, we show that LLMs can solve real-world regression problems and then design experiments to measure the extent to which the LLM retrieves its internal knowledge versus learning from in-context examples. We argue that this process lies on a spectrum between these two extremes. We provide an in-depth analysis of the degrees to which these mechanisms are triggered depending on various factors, such as prior knowledge about the tasks and the type and richness of the information provided by the in-context examples. We employ three LLMs and utilize multiple datasets to corroborate the robustness of our findings. Our results shed light on how to engineer prompts to leverage meta-learning from in-context examples and foster knowledge retrieval depending on the problem being addressed."
+}
